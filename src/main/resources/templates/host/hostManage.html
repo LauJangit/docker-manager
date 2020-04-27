@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+       xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="layout :: htmlhead" th:with="title='用户管理'"></head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <!--头-->
+    <div th:replace="fragments/head :: header"></div>
+
+    <div class="layui-body" style="margin: 1%">
+
+        <!--<form id="userSearch" class="layui-form layui-form-pane" method="post" action="" style="margin-top: 20px;">-->
+            <!--<div class="layui-form-item">-->
+                <!--<label class="layui-form-label">用户名</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input id="sysUserName" name="sysUserName" autocomplete="off" class="layui-input" type="text"/>-->
+                <!--</div>-->
+                <!--<label class="layui-form-label">手机号</label>-->
+                <!--<div class="layui-input-inline">-->
+                    <!--<input id="userPhone" name="userPhone" autocomplete="off" class="layui-input" type="text" onkeyup="this.value=this.value.replace(/\D/g,'')"-->
+                           <!--onafterpaste="this.value=this.value.replace(/\D/g,'')"/>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="layui-form-item">-->
+                <!--<div class="layui-inline">-->
+                    <!--<label class="layui-form-label">注册时间</label>-->
+                        <!--<div class="layui-input-inline" style="width: 175px;">-->
+                            <!--<input  name="startTime" id="startTime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" type="text"/>-->
+                        <!--</div>-->
+                    <!--<div class="layui-form-mid">-</div>-->
+                        <!--<div class="layui-input-inline" style="width: 175px;">-->
+                            <!--<input name="endTime" id="endTime" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input" type="text"/>-->
+                        <!--</div>-->
+                    <!--<button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                    <!--<button class="layui-btn"  lay-submit="" lay-filter="searchSubmit">提交</button>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</form>-->
+
+        <!--&lt;!&ndash;<hr class="layui-bg-blue"/>&ndash;&gt;-->
+        <!--<hr class="layui-bg-black"/>-->
+
+        <button class="layui-btn layui-btn-normal" onclick="addHost('新增主机')">新增主机</button>
+
+        <div style="display:none;" id="currentUser"><shiro:principal property="id"></shiro:principal></div>
+
+        <table id="hostList" lay-filter="hostTable"></table>
+
+
+        <script type="text/html" id="optBar">
+            <a class="layui-btn layui-btn-xs" lay-event="look">查看容器</a>
+            <!--<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>-->
+            <!--{{#  if(d.userStatus == '0'){ }}-->
+            <!--<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="recover">恢复</a>-->
+            <!--{{#  } else { }}-->
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            <!--{{#  } }}-->
+        </script>
+    </div>
+
+
+    <!--添加或编辑主机-->
+    <div id="setHost" class="layer_self_wrap" style="width:500px;display:none;">
+        <form id="hostForm" class="layui-form layui-form-pane" method="post" action="" style="margin:10%;">
+            <input id="pageNum" type="hidden" name="pageNum"/>
+            <input id="id" type="hidden" name="id"/>
+            <div class="layui-form-item">
+                <label class="layui-form-label">ip地址</label>
+                <div class="layui-input-inline">
+                    <input id="ip" name="ip" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">主机名</label>
+                <div class="layui-input-inline">
+                    <input id="hostname" name="hostname" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">产品</label>
+                <div class="layui-input-inline">
+                    <input id="product" name="product" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">应用</label>
+                <div class="layui-input-inline">
+                    <input id="application" name="application" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">机柜号</label>
+                <div class="layui-input-inline">
+                    <input id="roomno" name="roomno" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <input id="status" name="status" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input id="memo" name="memo" lay-verify="required" autocomplete="off" class="layui-input" type="text"/>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left: 5%;">
+                    <button class="layui-btn"  lay-submit="" lay-filter="userSubmit">提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <table id="containerList" lay-filter="containerTable" style="display:none;">
+
+    </table>
+
+
+    <!--底部-->
+    <div th:replace="fragments/footer :: footer"></div>
+    <script src="/js/dateUtils.js"></script>
+    <script src="/js/host/hostList.js"></script>
+
+</div>
+</body>
+</html>

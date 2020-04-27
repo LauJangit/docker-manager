@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.docker.manager.dao.BaseContainerMapper">
+  <resultMap id="BaseResultMap" type="com.docker.manager.pojo.BaseContain">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="containnames" jdbcType="VARCHAR" property="containnames" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
+    <result column="ports" jdbcType="VARCHAR" property="ports" />
+  </resultMap>
+
+  <sql id="baseColumn">
+      id,containnames,status,image,ports,ip
+  </sql>
+
+  <select id="getContainerList" resultType="com.docker.manager.dto.ContainerDTO">
+    SELECT <include refid="baseColumn"/>
+    FROM containerlist
+    WHERE ip = #{ip}
+  </select>
+
+  <select id="getContainer" resultType="com.docker.manager.dto.ContainerDTO">
+    SELECT <include refid="baseColumn"/>
+    FROM containerlist
+    WHERE id = #{id}
+  </select>
+
+  <insert id="insertBatch" parameterType="list">
+    insert into containerlist
+    (id,containnames,status,image,ports,ip)
+    values
+    <foreach collection="list" item="dept" index="index" separator=",">
+      (
+      #{dept.id,jdbcType=VARCHAR},#{dept.containnames,jdbcType=VARCHAR}
+      ,#{dept.status,jdbcType=VARCHAR},#{dept.image,jdbcType=VARCHAR}
+      ,#{dept.ports,jdbcType=VARCHAR},#{dept.ip,jdbcType=VARCHAR}
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE
+    id = values(id),
+    containnames = values(containnames),
+    status = values(status),
+    image = values(image),
+    ports = values(ports),
+    ip = values(ip)
+  </insert>
+
+</mapper>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+       xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head th:include="layout :: htmlhead" th:with="title='容器管理'"><meta charset="utf-8" />
+    <title></title>
+    <style>
+
+        .box{
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .show {
+            width: 100%;
+            height: 400px;
+            overflow-y:scroll;
+
+            padding: 10px;
+            background-color: black;
+            color: white;
+        }
+
+        .common {
+            width: 100%;
+            height: 50px;
+        }
+
+        .common-input {
+            width: 80%;
+        }
+        .common-button {
+            width: 18%;
+        }
+    </style>
+
+</head>
+<body class="layui-layout-body">
+<form id="containerForm" class="layui-form layui-form-pane" style="margin-top: 20px;">
+    <button type="button" class="layui-btn layui-btn-primary layui-btn-radius" onclick="start()" style="margin: 5%">启动容器</button>
+    <button type="button" class="layui-btn layui-btn-primary layui-btn-radius" onclick="end()" style="margin: 5%">关闭容器</button>
+</form>
+</body>
+<script>
+    /**
+     * 启动容器
+     * */
+    function start() {
+        $.ajax({
+            url:"/container/startContainer",
+            type:"post",
+            cache : false,
+            success:function(data){
+                if (data.code == 200) {
+                    layer.msg(data.msg, {icon: 1});
+                    admin.finishPopupCenter();
+                } else {
+                    layer.msg(data.msg, {icon: 2});
+                }
+            }
+        });
+    }
+    /**
+     * 关闭容器
+     * */
+    function end() {
+        $.ajax({
+            url:"/container/endContainer",
+            type:"post",
+            cache : false,
+            success:function(data){
+                if (data.code == 200) {
+                    layer.msg(data.msg, {icon: 1});
+                    admin.finishPopupCenter();
+                } else {
+                    layer.msg(data.msg, {icon: 2});
+                }
+            }
+        });
+    }
+</script>
+</html>

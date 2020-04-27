@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.docker.manager.dao.BaseHostMapper">
+  <resultMap id="BaseResultMap" type="com.docker.manager.pojo.BaseHost">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="product" jdbcType="VARCHAR" property="product" />
+    <result column="application" jdbcType="VARCHAR" property="application" />
+    <result column="roomno" jdbcType="VARCHAR" property="roomno" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="memo" jdbcType="VARCHAR" property="memo" />
+  </resultMap>
+
+  <sql id="baseColumn">
+      id,ip,hostname,product,application,roomno,userid,status,memo
+  </sql>
+
+  <select id="getHostList" resultType="com.docker.manager.dto.HostDTO">
+    SELECT <include refid="baseColumn"/>
+    FROM host
+    WHERE userid = #{userid}
+  </select>
+
+  <insert id="insertHost" parameterType="list">
+    insert into host
+    (id,hostname,product,application,roomno,userid,status,memo,ip)
+    values
+    <foreach collection="list" item="dept" index="index" separator=",">
+      (
+      #{dept.id,jdbcType=INTEGER},#{dept.hostname,jdbcType=VARCHAR}
+      ,#{dept.product,jdbcType=VARCHAR},#{dept.application,jdbcType=VARCHAR}
+      ,#{dept.roomno,jdbcType=VARCHAR},#{dept.userid,jdbcType=VARCHAR}
+      ,#{dept.status,jdbcType=VARCHAR} ,#{dept.memo,jdbcType=VARCHAR}
+      ,#{dept.ip,jdbcType=VARCHAR}
+      )
+    </foreach>
+    ON DUPLICATE KEY UPDATE
+    id = values(id),
+    hostname = values(hostname),
+    product = values(product),
+    application = values(application),
+    roomno = values(roomno),
+    userid = values(userid),
+    status = values(status),
+    memo = values(memo),
+    ip = values(ip)
+  </insert>
+
+</mapper>
